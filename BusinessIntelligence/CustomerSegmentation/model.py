@@ -9,10 +9,17 @@ from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import pickle
+import os
+import glob
 
 
-def customer_seg(data_path):
-    df = pd.read_csv(data_path)
+def customer_seg(path):
+    os.chdir(path)
+    extension = 'csv'
+    all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
+    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
+    combined_csv.to_csv("combined_csv.csv", index=False, encoding='utf-8-sig')
+    df = pd.read_csv('combined_csv.csv')
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     df["InvoiceDate"] = df["InvoiceDate"].dt.date
     df["TotalSum"] = df["Quantity"]*df["UnitPrice"]
@@ -52,8 +59,6 @@ def customer_seg(data_path):
     df_nor_melt.to_csv('result.csv')
     return                 
 
-path = 'data.csv'
+path = 'D:\WUDI_Internship\BusinessIntelligence\CustomerSegmentation'
 customer_seg(path)
-
-
 
