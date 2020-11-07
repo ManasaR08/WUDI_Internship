@@ -49,7 +49,8 @@ def customer_seg(data_path):
     sns.lineplot('Attribute', 'Value', hue='Cluster', data=df_nor_melt)
     pickle.dump(model,open('model.pkl','wb'))
     model = pickle.load(open('model.pkl','rb'))
-    return df_nor_melt                  
+    df_nor_melt.to_csv('result.csv')
+    return                 
 
 path = 'data.csv'
 customer_seg(path)

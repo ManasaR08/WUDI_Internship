@@ -17,7 +17,9 @@ def upload():
     if request.method =='POST':
         f=request.files['file']
         f.save(f.filename) 
-        return render_template("success.html",name=f.filename)
+        path = f"D:\WUDI_Internship\BusinessIntelligence\CustomerSegmentation\\"
+        customer_seg(path +  f.filename)
+        return render_template("success.html",name=f.filename, value = "result.csv")
 
 
 
