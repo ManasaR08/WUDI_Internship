@@ -15,8 +15,8 @@ def home():
 @app.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        f = request.files['file']
-        f.save(f.filename)
+        f = request.files.getlist['file[]']
+        print(f)
         customer_seg(os.path.join(current_app.root_path, f.filename))
         return render_template("success.html", name=f.filename)
 
