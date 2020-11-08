@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 import pickle
 import os
 import glob
+import csv
 
 
 def customer_seg(path):
@@ -29,7 +30,7 @@ def customer_seg(path):
         csvwriter = csv.writer(csv_out, delimiter=',')
         csvwriter.writerows(merged_rows)
         df = pd.read_csv("output.csv",encoding= 'unicode_escape', names=["InvoiceNo", "StockCode", "Description", "Quantity","InvoiceDate","UnitPrice","CustomerID","Country"])
-        df.to_csv("combined_csv")
+        df.to_csv("combined_csv.csv", encoding = 'unicode_escape')
     df = pd.read_csv('combined_csv.csv')
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     df["InvoiceDate"] = df["InvoiceDate"].dt.date
