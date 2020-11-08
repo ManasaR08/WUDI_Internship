@@ -15,7 +15,7 @@ def home():
 @app.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        f = request.files.getlist['file[]']
+        f = request.files['file']
         print(f)
         customer_seg(os.path.join(current_app.root_path, f.filename))
         return render_template("success.html", name=f.filename)
@@ -23,7 +23,7 @@ def upload():
 
 @app.route('/get_result', methods=['GET'])
 def get_result():
-    return send_from_directory(directory=current_app.root_path, filename="result.csv")
+    return send_from_directory(directory=current_app.root_path, filename="output/result.csv")
 
 
 if __name__ == "__main__":

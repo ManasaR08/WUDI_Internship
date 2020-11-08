@@ -16,9 +16,20 @@ import glob
 def customer_seg(path):
     os.chdir(path)
     extension = 'csv'
-    all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
-    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
-    combined_csv.to_csv("combined_csv.csv", index=False, encoding='utf-8-sig')
+    files = [i for i in glob.glob('*.{}'.format(extension))]
+    final_headers = ['InvoiceNo', 'StockCode', 'Description','Quantity','InvoiceDate','UnitPrice','CustomerID','Country']
+    merged_rows = set()
+    for f in files:
+        with open(f, 'r') as csv_in:
+            csvreader = csv.reader(csv_in, delimiter=',')
+            headers = dict((h, i) for i, h in enumerate(next(csvreader)))
+            for row in csvreader:
+                merged_rows.add(tuple(row[headers[x]] for x in final_headers))
+    with open('output.csv', 'w') as csv_out:
+        csvwriter = csv.writer(csv_out, delimiter=',')
+        csvwriter.writerows(merged_rows)
+        df = pd.read_csv("output.csv",encoding= 'unicode_escape', names=["InvoiceNo", "StockCode", "Description", "Quantity","InvoiceDate","UnitPrice","CustomerID","Country"])
+        df.to_csv("combined_csv")
     df = pd.read_csv('combined_csv.csv')
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     df["InvoiceDate"] = df["InvoiceDate"].dt.date
@@ -56,7 +67,7 @@ def customer_seg(path):
     sns.lineplot('Attribute', 'Value', hue='Cluster', data=df_nor_melt)
     pickle.dump(model,open('model.pkl','wb'))
     model = pickle.load(open('model.pkl','rb'))
-    df_nor_melt.to_csv('result.csv')
+    df_nor_melt.to_csv('output/result.csv')
     return                 
 
 path = 'D:\WUDI_Internship\BusinessIntelligence\CustomerSegmentation'
