@@ -1,7 +1,5 @@
 import os
-
 from flask import Flask, request, render_template, current_app, send_from_directory
-
 from model import customer_seg
 
 app = Flask(__name__)
