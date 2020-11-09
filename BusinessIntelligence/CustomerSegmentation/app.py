@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, render_template, current_app, send_from_directory
-from model import customer_seg
+from m import customer_seg
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ def home():
 def upload():
     if request.method == 'POST':
         f = request.files['file']
-        print(f)
+        f.save(f.filename)
         customer_seg(os.path.join(current_app.root_path, f.filename))
         return render_template("success.html", name=f.filename)
 

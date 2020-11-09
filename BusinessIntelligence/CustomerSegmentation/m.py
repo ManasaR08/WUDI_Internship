@@ -15,23 +15,7 @@ import csv
 
 
 def customer_seg(path):
-    os.chdir(path)
-    extension = 'csv'
-    files = [i for i in glob.glob('*.{}'.format(extension))]
-    final_headers = ["InvoiceNo", "StockCode", "Description","Quantity","InvoiceDate","UnitPrice","CustomerID","Country"]
-    merged_rows = set()
-    for f in files:
-        with open(f, 'r') as csv_in:
-            csvreader = csv.reader(csv_in, delimiter=',')
-            headers = dict((h, i) for i, h in enumerate(next(csvreader)))
-            for row in csvreader:
-                merged_rows.add(tuple(row[headers[x]] for x in final_headers))
-    with open('output.csv', 'w') as csv_out:
-        csvwriter = csv.writer(csv_out, delimiter=',')
-        csvwriter.writerows(merged_rows)
-        df = pd.read_csv("output.csv",encoding= 'unicode_escape', names=["InvoiceNo", "StockCode", "Description", "Quantity","InvoiceDate","UnitPrice","CustomerID","Country"])
-        df.to_csv("combined_csv.csv")
-    df = pd.read_csv('combined_csv.csv',encoding = 'unicode_escape',index_col=0)
+    df = pd.read_csv('data.csv')
     df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
     df["InvoiceDate"] = df["InvoiceDate"].dt.date
     df["TotalSum"] = df["Quantity"]*df["UnitPrice"]
@@ -71,6 +55,5 @@ def customer_seg(path):
     df_nor_melt.to_csv('output/result.csv')
     return                 
 
-path = 'D:\WUDI_Internship\BusinessIntelligence\CustomerSegmentation'
-customer_seg(path)
+
 
