@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
+import glob
 
 def order_cluster(cluster_field_name, target_field_name,df_,ascending):
     new_cluster_field_name = 'new_' + cluster_field_name
@@ -18,11 +19,11 @@ def customer_segmentation(path):
     df_final = pd.DataFrame() 
     files = [i for i in glob.glob('*.{}'.format(extension))]
     for x in files:
-        df_all = pd.read_excel(x, encoding='latin-1', sheet_name=None)
-        for value in df_all.keys():
-            df = df_all[value]
-            df_final = pd.concat([df_final,df]) 
-    df_final['date'] = pd.to_datetime(df_final['date'])
+        df = pd.read_excel(x, encoding='latin-1')
+        df_final = pd.concat([df_final,df]) 
+    print(df_final.head()) 
+    df_final.dropna()
+    df_final['date'] = pd.to_datetime(df_final['date'].astype(str), errors='coerce')
     df_user = pd.DataFrame(df_final['customer_name'].unique())
     df_user.columns = ['customer_name']
     df_max_purchase = df_final.groupby('customer_name').date.max().reset_index()
@@ -32,7 +33,9 @@ def customer_segmentation(path):
     df_frequency = df_final.groupby('customer_name').date.count().reset_index()
     df_frequency.columns = ['customer_name','frequency']
     df_user = pd.merge(df_user, df_frequency, on='customer_name')
-    df_profit = df_final.groupby('customer_name').profit.sum().reset_index()
+    df_final['profit'] = (df_final['sale_price'] - df_final['cost_price'])
+    df_final['profit'] = df_final['profit']*df_final['billed_quantity']
+    df_profit = df_final.groupby('customer_name')['profit'].sum().reset_index()
     df_user = pd.merge(df_user, df_profit, on='customer_name')
     scaler = MinMaxScaler()
     df_user[['recency','frequency','profit']] = scaler.fit_transform(df_user[['recency','frequency','profit']])
@@ -54,3 +57,5 @@ def customer_segmentation(path):
     df_user.loc[df_user['overall_score']>4,'segment'] = 'High-Value' 
     df_user.to_csv('customer_segmentation.csv')
     return
+
+customer_segmentation('D:\WUDI_Internship\BusinessIntelligence\CustomerSegmentation\test2')
