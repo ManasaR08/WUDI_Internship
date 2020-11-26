@@ -1,0 +1,69 @@
+Google Research Football: A Novel Reinforcement Learning Environment
+KarolKurach∗ AntonRaichuk(cid:63) PiotrStan´czyk(cid:63) MichałZaja¸c†
+OlivierBachem LasseEspeholt CarlosRiquelme DamienVincent
+MarcinMichalski OlivierBousquet SylvainGelly
+GoogleResearch,BrainTeam
+0
+2
+0
+Abstract
+2
+  Recent progress in the ﬁeld of reinforcement learning has
+r
+p been accelerated by virtual learning environments such
+A as video games, where novel algorithms and ideas can
+be quickly tested in a safe and reproducible manner. We
+ 
+4 introduce the Google Research Football Environment, a
+1 new reinforcement learning environment where agents are
+  trained to play football in an advanced, physics-based 3D
+ 
+] simulator. The resulting environment is challenging, easy
+G
+touseandcustomize,anditisavailableunderapermissive
+L open-source license. In addition, it provides support for
+. multiplayer and multi-agent experiments. We propose three
+s full-game scenarios of varying difﬁculty with the Football
+c
+Benchmarksandreportbaselineresultsforthreecommonly
+[ Figure 1: The Google Research Football Environment
+  used reinforcement algorithms (IMPALA, PPO, and Ape-X
+  (github.com/google-research/football) pro-
+2 DQN). We also provide a diverse set of simpler scenarios
+v withtheFootballAcademyandshowcaseseveralpromising vides a novel reinforcement learning environment where
+0 researchdirections. agents are trained to play football in an advance, physics
+8 based3Dsimulation.
+1 Introduction
+1
+1 The goal of reinforcement learning (RL) is to train smart
+. agents that can interact with their environment and solve which we discuss in detail in the next section. For exam-
+7
+complex tasks (Sutton and Barto, 2018). Real-world appli- ple, they may either be too easy to solve for state-of-the-
+0
+cationsincluderobotics(Haarnojaetal.,2018),self-driving art algorithms or require access to large amounts of com-
+9
+cars (Bansal, Krizhevsky, and Ogale, 2018), and control putational resources. At the same time, they may either be
+1
+: problems such as increasing the power efﬁciency of data (near-)deterministic or there may even be a known model
+v centers (Lazic et al., 2018). Yet, the rapid progress in this of the environment (such as in Go or Chess). Similarly,
+Xi ﬁeld has been fueled by making agents play games such manylearningenvironmentsareinherentlysingleplayerby
+as the iconic Atari console games (Bellemare et al., 2013; only modeling the interaction of an agent with a ﬁxed en-
+r
+a Mnih et al., 2013), the ancient game of Go (Silver et al., vironmentortheyfocusonasingleaspectofreinforcement
+2016), or professionally played video games like Dota 2 learningsuchascontinuouscontrolorsafety.Finally,learn-
+(OpenAI, 2019) or Starcraft II (Vinyals et al., 2017). The ingenvironmentsmayhaverestrictivelicensesordependon
+reason for this is simple: games provide challenging envi- closedsourcebinaries.
+ronments where new algorithms and ideas can be quickly ThishighlightstheneedforaRLenvironmentthatisnot
+testedinasafeandreproduciblemanner. only challenging from a learning standpoint and customiz-
+While a variety of reinforcement learning environments able in terms of difﬁculty but also accessible for research
+exist, they often come with a few drawbacks for research, bothintermsoflicensingandintermsofrequiredcomputa-
+tionalresources.Moreover,suchanenvironmentshouldide-
+∗Indicates equal authorship. Correspondence to Karol Kurach
+ally provide the tools to a variety of current reinforcement
+(kkurach@google.com).
+learningresearchtopicssuchastheimpactofstochasticity,
+†Student at Jagiellonian University, work done during intern-
+self-play,multi-agentsetupsandmodel-basedreinforcement
+shipatGoogleBrain.
+Copyright(cid:13)c 2020,AssociationfortheAdvancementofArtiﬁcial learning, while also requiring smart decisions, tactics, and
+Intelligence(www.aaai.org).Allrightsreserved. strategiesatmultiplelevelsofabstraction.
